@@ -42,7 +42,7 @@ run.sh: $(TARGETS)
 	@echo -e $(foreach BENCHMARK, $(BENCHMARKS), '\necho "= $(BENCHMARK) ="' \
              $(foreach COMPILER,  $(COMPILERS), \
              "\n./$(BENCHMARK)_$(COMPILER) $(ITERATIONS)")) >> run.sh
-	$(shell chmod a+x ./run.sh)
+	@chmod a+x ./run.sh
 
 clean:
 	-rm -f $(ASMFILES) $(TARGETS) *.o
