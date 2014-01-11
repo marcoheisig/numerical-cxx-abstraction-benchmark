@@ -19,8 +19,7 @@ const size_t domain_size       = 20 * 1000;
 const size_t flops_per_stencil = 4;
 
 /* The weights of a standard five point stencil */
-const real w0 = 0.25; // 1 / (4 * h^2)
-const real w1 = 1;    // 1 / h^2
+const real w = 0.25; // 1 / (4 * h^2)
 
 /* derived quantities */
 const size_t columns           = (domain_size / 2 / sizeof(real) / rows);

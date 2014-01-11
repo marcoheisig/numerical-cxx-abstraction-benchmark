@@ -1,4 +1,4 @@
-/* Numerical C++ Abstraction Benchmark */
+/* Numerical C++ Abstraction Benchmark - main file */
 
 #include <cstddef>
 #include <cstdio>
@@ -6,10 +6,6 @@
 #include <vector>
 #include <sys/time.h>
 #include "config.hh"
-
-#ifndef BENCHMARKNAME
-#define BENCHMARKNAME "undefined"
-#endif
 
 int main(int argc, char** argv) {
     if(1 == argc) {

@@ -7,7 +7,7 @@ g++_CXXFLAGS := -Ofast -Wall -Werror -std=c++11 -march=native -mtune=native
 clang++_CXXFLAGS   := -Ofast -Wall -Werror -std=c++11 -march=native -mtune=native
 
 HEADERS     := config.hh fixalloc.hh
-BENCHMARKS  := plain wrapped vector vecvec # stencilclass lambda
+BENCHMARKS  := plain wrapped vector vecvec stencil #lambda
 TARGETS     := $(foreach COMPILER,$(COMPILERS), \
                $(foreach BENCHMARK,$(BENCHMARKS), \
                $(BENCHMARK)_$(COMPILER)))
@@ -19,14 +19,9 @@ all:        benchmarks asm run.sh
 benchmarks: $(TARGETS)
 asm:        $(ASMFILES)
 
-define BENCHMARK_TEMPLATE =
-benchmark_$(1).o: benchmark.cc $$(HEADERS)
-	$(1) $$($(1)_CXXFLAGS) $$< -c -o $$@
-endef
-
 define BUILD_TEMPLATE =
-$(1)_$(2): $(1).cc benchmark_$(2).o $$(HEADERS)
-	$(2) $$($(2)_CXXFLAGS) $$< benchmark_$(2).o -o $$@
+$(1)_$(2): $(1).cc benchmark.cc $$(HEADERS)
+	$(2) $$($(2)_CXXFLAGS) $$< benchmark.cc -o $$@
 endef
 
 define ASM_TEMPLATE =
@@ -35,7 +30,6 @@ $(1)_$(2).s: $(1).cc benchmark.cc $$(HEADERS)
 endef
 
 $(foreach COMPILER,  $(COMPILERS),  \
-$(eval $(call BENCHMARK_TEMPLATE,$(COMPILER))) \
     $(foreach BENCHMARK, $(BENCHMARKS), \
     $(eval $(call BUILD_TEMPLATE,$(BENCHMARK),$(COMPILER))) \
     $(eval $(call ASM_TEMPLATE,$(BENCHMARK),$(COMPILER)))))
@@ -45,10 +39,10 @@ run.sh: $(TARGETS)
 	@echo "creating run.sh"
 	@echo '#!/bin/sh' > run.sh
 	@echo 'echo "== C++ abstraction compiler benchmark by Marco Heisig =="' >> run.sh
-	@echo -e $(foreach COMPILER,  $(COMPILERS), '\necho "= $(COMPILER) ="' \
-             $(foreach BENCHMARK, $(BENCHMARKS), \
+	@echo -e $(foreach BENCHMARK, $(BENCHMARKS), '\necho "= $(BENCHMARK) ="' \
+             $(foreach COMPILER,  $(COMPILERS), \
              "\n./$(BENCHMARK)_$(COMPILER) $(ITERATIONS)")) >> run.sh
-	$(shell chmod a+x run.sh)
+	$(shell chmod a+x ./run.sh)
 
 clean:
 	-rm -f $(ASMFILES) $(TARGETS) *.o

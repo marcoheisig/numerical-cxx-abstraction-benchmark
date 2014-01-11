@@ -30,10 +30,10 @@ void run(std::vector<real> &src_vec, std::vector<real> &dest_vec) {
 
     for(size_t iy = 1; iy < rows - 1; ++iy) {
         for(size_t ix = 1; ix < columns - 1; ++ix) {
-            dest[iy][ix] = w0 * w1 * (src[iy - 1][ix] +
-                                      src[iy + 1][ix] +
-                                      src[iy][ix - 1] +
-                                      src[iy][ix + 1]);
+            dest[iy][ix] = w * (src[iy - 1][ix] +
+                                src[iy + 1][ix] +
+                                src[iy][ix - 1] +
+                                src[iy][ix + 1]);
         }
     }
 }
