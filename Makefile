@@ -1,13 +1,22 @@
 ITERATIONS         := 1000000
-COMPILERS          := icpc clang++ g++-4.8.2 g++
+COMPILERS          :=
+COMPILERS          += icpc
 icpc_CXXFLAGS      := -Ofast -Wall -Werror -std=c++11 -march=native -mtune=native \
--fno-alias -inline-level=2 -no-inline-max-size
-g++-4.8.2_CXXFLAGS := -Ofast -Wall -Werror -std=c++11 -march=native -mtune=native
-g++_CXXFLAGS := -Ofast -Wall -Werror -std=c++11 -march=native -mtune=native
+                      -fno-alias -inline-level=2 -no-inline-max-size
+
+COMPILERS          += g++-4.7.3
+g++-4.7.3_CXXFLAGS := -Ofast -Wall -Werror -std=c++11 -march=native -mtune=native \
+                      -funroll-loops
+
+COMPILERS          += g++-4.8.2
+g++-4.8.2_CXXFLAGS := -Ofast -Wall -Werror -std=c++11 -march=native -mtune=native \
+                      -funroll-loops
+
+COMPILERS          += clang++
 clang++_CXXFLAGS   := -Ofast -Wall -Werror -std=c++11 -march=native -mtune=native
 
 HEADERS     := config.hh fixalloc.hh
-BENCHMARKS  := plain wrapped vector vecvec stencil #lambda
+BENCHMARKS  := plain wrap opwrap vector vecvec stencil # everything # lambda
 TARGETS     := $(foreach COMPILER,$(COMPILERS), \
                $(foreach BENCHMARK,$(BENCHMARKS), \
                $(BENCHMARK)_$(COMPILER)))
@@ -26,7 +35,7 @@ endef
 
 define ASM_TEMPLATE =
 $(1)_$(2).s: $(1).cc benchmark.cc $$(HEADERS)
-	$(2) $$($(2)_CXXFLAGS) -c -S $$< -o $$@
+	$(2) $$($(2)_CXXFLAGS) -S -c $$< -o $$@
 endef
 
 $(foreach COMPILER,  $(COMPILERS),  \
@@ -39,9 +48,9 @@ run.sh: $(TARGETS)
 	@echo "creating run.sh"
 	@echo '#!/bin/sh' > run.sh
 	@echo 'echo "== C++ abstraction compiler benchmark by Marco Heisig =="' >> run.sh
-	@echo -e $(foreach BENCHMARK, $(BENCHMARKS), '\necho "= $(BENCHMARK) ="' \
-             $(foreach COMPILER,  $(COMPILERS), \
-             "\n./$(BENCHMARK)_$(COMPILER) $(ITERATIONS)")) >> run.sh
+	@echo -e $(foreach BENCHMARK, $(BENCHMARKS), '\necho' \
+                 $(foreach COMPILER,  $(COMPILERS), \
+                 "\n./$(BENCHMARK)_$(COMPILER) $(ITERATIONS)")) >> run.sh
 	@chmod a+x ./run.sh
 
 clean:
