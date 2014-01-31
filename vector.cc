@@ -11,5 +11,4 @@ void run(std::vector<real> &src, std::vector<real> &dest) {
                                src[index + columns]);
         }
     }
-
 }

@@ -25,6 +25,9 @@ public:
 
     typedef std::true_type propagate_on_container_move_assignment;
 
+    fixalloc() : mem(NULL)
+    { }
+
     fixalloc(pointer mem) : mem(mem)
     { }
 

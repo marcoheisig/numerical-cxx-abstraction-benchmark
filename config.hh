@@ -3,7 +3,7 @@
 #include <vector>
 
 /*
-  The benchmark performs a specified number of Gauss-Seidel sweeps on a
+  The benchmark performs a specified number of Jacobi sweeps on a
   rectangular domain. The domain is defined here by a size in bytes and the
   number of rows. Note, that the border points of the domain act as ghost
   layer and are not updated.

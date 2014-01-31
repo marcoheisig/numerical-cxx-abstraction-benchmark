@@ -1,8 +1,6 @@
 #include <array>
 #include "config.hh"
 
-#include <iostream>
-using namespace std;
 namespace {
 
 template<size_t H, size_t W>

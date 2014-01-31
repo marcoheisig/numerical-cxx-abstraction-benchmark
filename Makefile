@@ -1,22 +1,21 @@
 ITERATIONS         := 1000000
 COMPILERS          :=
+
+COMPILERS          += g++-4.7.3
+g++-4.7.3_CXXFLAGS := -Ofast -Wall -Werror -std=c++11 -march=native -mtune=native
+
+COMPILERS          += g++-4.8.2
+g++-4.8.2_CXXFLAGS := -Ofast -Wall -Werror -std=c++11 -march=native -mtune=native
+
 COMPILERS          += icpc
 icpc_CXXFLAGS      := -Ofast -Wall -Werror -std=c++11 -march=native -mtune=native \
                       -fno-alias -inline-level=2 -no-inline-max-size
-
-COMPILERS          += g++-4.7.3
-g++-4.7.3_CXXFLAGS := -Ofast -Wall -Werror -std=c++11 -march=native -mtune=native \
-                      -funroll-loops
-
-COMPILERS          += g++-4.8.2
-g++-4.8.2_CXXFLAGS := -Ofast -Wall -Werror -std=c++11 -march=native -mtune=native \
-                      -funroll-loops
 
 COMPILERS          += clang++
 clang++_CXXFLAGS   := -Ofast -Wall -Werror -std=c++11 -march=native -mtune=native
 
 HEADERS     := config.hh fixalloc.hh
-BENCHMARKS  := plain wrap opwrap vector vecvec stencil # everything # lambda
+BENCHMARKS  := plain vector stencil wrap opwrap vecvec # everything # lambda
 TARGETS     := $(foreach COMPILER,$(COMPILERS), \
                $(foreach BENCHMARK,$(BENCHMARKS), \
                $(BENCHMARK)_$(COMPILER)))
@@ -54,4 +53,4 @@ run.sh: $(TARGETS)
 	@chmod a+x ./run.sh
 
 clean:
-	-rm -f $(ASMFILES) $(TARGETS) *.o
+	-rm -f $(ASMFILES) $(TARGETS)
