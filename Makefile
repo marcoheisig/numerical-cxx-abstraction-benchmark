@@ -15,7 +15,7 @@ COMPILERS          += clang++
 clang++_CXXFLAGS   := -Ofast -Wall -Werror -std=c++11 -march=native -mtune=native
 
 HEADERS     := config.hh fixalloc.hh
-BENCHMARKS  := plain vector stencil wrap opwrap vecvec # everything # lambda
+BENCHMARKS  := plain vector stencil wrap opwrap vecvec
 TARGETS     := $(foreach COMPILER,$(COMPILERS), \
                $(foreach BENCHMARK,$(BENCHMARKS), \
                $(BENCHMARK)_$(COMPILER)))
