@@ -14,15 +14,14 @@
  */
 typedef double real;
 
-const size_t rows              = 3; // some benchmarks break with rows != 3
-const size_t domain_size       = 25 * 1000;
+/* adapt this value to cache size */
+const size_t cache_size           = 28 * 1000;
+const size_t domain_size       = cache_size / 2;
+
+const size_t rows              = 3;
 const size_t flops_per_stencil = 4;
-
-/* The weights of a standard five point stencil */
-const real w = 0.25; // 1 / (4 * h^2)
-
-/* derived quantities */
-const size_t columns           = (domain_size / 2 / sizeof(real) / rows);
+const real w                   = 0.25; // 1 / (4 * h^2)
+const size_t columns           = (domain_size / sizeof(real) / rows);
 const size_t cells             = rows * columns;
 const size_t stencils_per_iter = (rows - 2) * (columns - 2);
 const size_t flops_per_iter    = stencils_per_iter * flops_per_stencil;

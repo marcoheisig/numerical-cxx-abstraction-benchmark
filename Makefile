@@ -2,35 +2,34 @@ ITERATIONS         := 1000000
 COMPILERS          :=
 
 COMPILERS          += g++-4.1.2
-g++-4.1.2_CXXFLAGS := -O3 -Wall -Werror -march=k8 -ffast-math
+g++-4.1.2_CXXFLAGS := -O3 -march=nocona -ffast-math
 
 COMPILERS          += g++-4.3.6
-g++-4.3.6_CXXFLAGS := -O3 -ffast-math -Wall -Werror -march=native -mtune=native
+g++-4.3.6_CXXFLAGS := -O3 -ffast-math -march=native
 
 COMPILERS          += g++-4.4.7
-g++-4.4.7_CXXFLAGS := -O3 -ffast-math -Wall -Werror -march=native -mtune=native
+g++-4.4.7_CXXFLAGS := -O3 -ffast-math -march=native
 
 COMPILERS          += g++-4.5.4
-g++-4.5.4_CXXFLAGS := -O3 -ffast-math -Wall -Werror -march=native -mtune=native
+g++-4.5.4_CXXFLAGS := -O3 -ffast-math -march=native
 
 COMPILERS          += g++-4.6.3
-g++-4.6.3_CXXFLAGS := -Ofast -Wall -Werror -march=native -mtune=native
+g++-4.6.3_CXXFLAGS := -Ofast -march=native
 
 COMPILERS          += g++-4.7.3
-g++-4.7.3_CXXFLAGS := -Ofast -Wall -Werror -march=native -mtune=native
+g++-4.7.3_CXXFLAGS := -Ofast -march=native
 
 COMPILERS          += g++-4.8.2
-g++-4.8.2_CXXFLAGS := -Ofast -Wall -Werror -march=native -mtune=native
+g++-4.8.2_CXXFLAGS := -Ofast -march=native
 
 COMPILERS          += icpc
-icpc_CXXFLAGS      := -Ofast -Wall -Werror -march=native -mtune=native \
-                      -fno-alias -inline-level=2 -no-inline-max-size
+icpc_CXXFLAGS      := -Ofast -march=native -fno-alias -inline-level=2 -no-inline-max-size
 
 COMPILERS          += clang++
-clang++_CXXFLAGS   := -Ofast -Wall -Werror -march=native -mtune=native
+clang++_CXXFLAGS   := -Ofast -march=native
 
 COMPILERS          += pgc++
-pgc++_CXXFLAGS   := -fast -Mvect=simd:256
+pgc++_CXXFLAGS     := -fastsse -tp=sandybridge -Mvect=simd:256 -Msafeptr
 
 #COMPILERS          += xlC
 xlC_CXXFLAGS       := –O5 –q64 -qhot -qarch=pwr7 -qtune=pwr7 -qalias=noallptrs -qsimd=auto
@@ -42,14 +41,16 @@ BENCHMARKS  += vector
 #BENCHMARKS  += stencil  # does not work yet
 #BENCHMARKS  += wrap     # not different enough from opwrap
 BENCHMARKS  += opwrap
-BENCHMARKS  += iter
 #BENCHMARKS  += vecvec
 #BENCHMARKS  += template
+BENCHMARKS   += 3ptrs
+BENCHMARKS   += 4ptrs
+BENCHMARKS  += iter
+BENCHMARKS  += transform
 
 TARGETS     := $(foreach COMPILER,$(COMPILERS), \
                $(foreach BENCHMARK,$(BENCHMARKS), \
                $(BENCHMARK)_$(COMPILER)))
-ASMFILES    := $(patsubst %, %.s, $(TARGETS))
 
 .PHONY: all asm benchmarks run.sh clean
 
