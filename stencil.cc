@@ -1,13 +1,8 @@
-#include <array>
 #include "config.hh"
 
 namespace {
-
-template<size_t H, size_t W>
+template<size_t W, size_t H>
 struct Stencil {
-    Stencil(std::array<std::array<real, W>, H> weights)
-        : weights(weights) { }
-
     inline real apply_to(real* data, size_t index, size_t stride) const {
         real acc = 0.0;
         size_t i = index - 1 - stride; // upper left corner of the stencil
@@ -18,7 +13,8 @@ struct Stencil {
         }
         return acc;
     }
-    const std::array<std::array<real, W>, H> weights;
+
+    double weights[W][H];
 };
 }
 
@@ -27,11 +23,7 @@ void run(std::vector<real> &src_vec, std::vector<real> &dest_vec) {
     real *dest = dest_vec.data();
 
     // C++11 - embrace the future (finally more braces than Lisp...)
-    Stencil<3, 3> stencil = {{{
-                {{0, w, 0}},
-                {{w, 0, w}},
-                {{0, w, 0}}
-            }}};
+    Stencil<3, 3> stencil;
 
     for(size_t iy = 1; iy < rows - 1; ++iy) {
         for(size_t ix = 1; ix < columns - 1; ++ix) {

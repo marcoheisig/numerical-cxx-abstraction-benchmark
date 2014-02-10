@@ -1,6 +1,8 @@
 #include "config.hh"
 #include "fixalloc.hh"
 
+#define FIXVECTOR std::vector<Real, fixalloc<Real> >
+
 namespace {
 struct Real {
     Real() {}
@@ -11,9 +13,8 @@ struct Real {
 }
 
 void run(std::vector<real> &src_vec, std::vector<real> &dest_vec) {
-    using fixvector = std::vector<Real, fixalloc<Real>>;
-    auto  src = fixvector(cells, Real(), (Real*)src_vec.data());
-    auto dest = fixvector(cells, Real(), (Real*)dest_vec.data());
+    FIXVECTOR  src = FIXVECTOR(cells, Real(), (Real*) &src_vec[0]);
+    FIXVECTOR dest = FIXVECTOR(cells, Real(), (Real*)&dest_vec[0]);
 
     for(size_t iy = 1; iy < rows - 1; ++iy) {
         for(size_t ix = 1; ix < columns - 1; ++ix) {

@@ -1,6 +1,5 @@
 #pragma once
 #include <memory>
-#include <type_traits>
 #include <stdlib.h>
 
 using std::size_t;
@@ -23,8 +22,6 @@ public:
         typedef fixalloc<T1> other;
     };
 
-    typedef std::true_type propagate_on_container_move_assignment;
-
     fixalloc() : mem(NULL)
     { }
 
@@ -41,14 +38,6 @@ public:
     { }
 
     ~fixalloc() { }
-
-    pointer
-    address(reference x) const
-    { return std::addressof(x); }
-
-    const_pointer
-    address(const_reference x) const
-    { return std::addressof(x); }
 
     pointer
     allocate(size_type n, const void* hint = 0) {

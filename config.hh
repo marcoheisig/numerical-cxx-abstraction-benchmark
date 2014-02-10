@@ -14,8 +14,8 @@
  */
 typedef double real;
 
-const size_t rows              = 3;
-const size_t domain_size       = 20 * 1000;
+const size_t rows              = 3; // some benchmarks break with rows != 3
+const size_t domain_size       = 25 * 1000;
 const size_t flops_per_stencil = 4;
 
 /* The weights of a standard five point stencil */
