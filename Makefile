@@ -1,34 +1,38 @@
+# the default number of iterations run when calling run.sh
 ITERATIONS         := 1000000
 COMPILERS          :=
 
-COMPILERS          += g++-4.1.2
+#COMPILERS          += g++-4.1.2
 g++-4.1.2_CXXFLAGS := -O3 -march=nocona -ffast-math
 
-COMPILERS          += g++-4.3.6
+#COMPILERS          += g++-4.3.6
 g++-4.3.6_CXXFLAGS := -O3 -ffast-math -march=native
 
-COMPILERS          += g++-4.4.7
+#COMPILERS          += g++-4.4.7
 g++-4.4.7_CXXFLAGS := -O3 -ffast-math -march=native
 
-COMPILERS          += g++-4.5.4
+#COMPILERS          += g++-4.5.4
 g++-4.5.4_CXXFLAGS := -O3 -ffast-math -march=native
 
-COMPILERS          += g++-4.6.3
+#COMPILERS          += g++-4.6.3
 g++-4.6.3_CXXFLAGS := -Ofast -march=native
 
-COMPILERS          += g++-4.7.3
+#COMPILERS          += g++-4.7.3
 g++-4.7.3_CXXFLAGS := -Ofast -march=native
 
-COMPILERS          += g++-4.8.2
+#COMPILERS          += g++-4.8.2
 g++-4.8.2_CXXFLAGS := -Ofast -march=native
 
-COMPILERS          += icpc
+COMPILERS          += g++
+g++_CXXFLAGS       := -Ofast -march=native
+
+#COMPILERS          += icpc
 icpc_CXXFLAGS      := -Ofast -march=native -fno-alias -inline-level=2 -no-inline-max-size
 
-COMPILERS          += clang++
+#COMPILERS          += clang++
 clang++_CXXFLAGS   := -Ofast -march=native
 
-COMPILERS          += pgc++
+#COMPILERS          += pgc++
 pgc++_CXXFLAGS     := -fastsse -tp=sandybridge -Mvect=simd:256 -Msafeptr
 
 #COMPILERS          += xlC
@@ -38,15 +42,13 @@ HEADERS     := config.hh fixalloc.hh
 BENCHMARKS  :=
 BENCHMARKS  += plain
 BENCHMARKS  += vector
-#BENCHMARKS  += stencil  # does not work yet
+#BENCHMARKS  += stencil  # not supported by all compilers
 #BENCHMARKS  += wrap     # not different enough from opwrap
-BENCHMARKS  += opwrap
-#BENCHMARKS  += vecvec
-#BENCHMARKS  += template
-BENCHMARKS   += 3ptrs
-BENCHMARKS   += 4ptrs
+BENCHMARKS  += ptrs
 BENCHMARKS  += iter
 BENCHMARKS  += transform
+BENCHMARKS  += vecvec
+BENCHMARKS  += opwrap
 
 TARGETS     := $(foreach COMPILER,$(COMPILERS), \
                $(foreach BENCHMARK,$(BENCHMARKS), \
@@ -69,11 +71,15 @@ run.sh: $(TARGETS)
 	@echo "creating run.sh"
 	@echo '#!/bin/sh' > run.sh
 	@echo 'echo "== C++ abstraction compiler benchmark by Marco Heisig =="' >> run.sh
+	@echo "ITERATIONS=$(ITERATIONS)" >> run.sh
 	@echo -e $(foreach BENCHMARK, $(BENCHMARKS), '\necho' \
                  $(foreach COMPILER,  $(COMPILERS), \
-                 "\n./$(BENCHMARK)_$(COMPILER) $(ITERATIONS)")) >> run.sh
+                 '\n./$(BENCHMARK)_$(COMPILER) $$ITERATIONS')) >> run.sh
 	@chmod a+x ./run.sh
 
+# the clean.sh file accumulates all benchmark executables that have been
+# created so far. This way "make clean" eliminates all executables that have
+# been created, not only current make targets.
 clean.sh: $(TARGETS)
 	@echo "creating clean.sh"
 	@echo '#!/bin/sh' >> clean.sh
