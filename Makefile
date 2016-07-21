@@ -1,4 +1,5 @@
 # the default number of iterations run when calling run.sh
+
 ITERATIONS         := 1000000
 COMPILERS          :=
 
@@ -24,19 +25,19 @@ g++-4.7.3_CXXFLAGS := -Ofast -march=native
 g++-4.8.2_CXXFLAGS := -Ofast -march=native
 
 COMPILERS          += g++
-g++_CXXFLAGS       := -Ofast -march=native
+g++_CXXFLAGS       := -Ofast -march=native -ffast-math -fargument-noalias -fargument-noalias-global
 
-#COMPILERS          += icpc
-icpc_CXXFLAGS      := -Ofast -march=native -fno-alias -inline-level=2 -no-inline-max-size
+COMPILERS          += icpc
+icpc_CXXFLAGS      := -align -Ofast -fno-exceptions -xAVX -fno-alias -inline-level=2 -no-inline-max-size
 
 #COMPILERS          += clang++
 clang++_CXXFLAGS   := -Ofast -march=native
 
 #COMPILERS          += pgc++
-pgc++_CXXFLAGS     := -fastsse -tp=sandybridge -Mvect=simd:256 -Msafeptr
+pgc++_CXXFLAGS     := --no_exceptions -fastsse -tp=sandybridge -Mvect=simd:256 -Msafeptr
 
 #COMPILERS          += xlC
-xlC_CXXFLAGS       := –O5 –q64 -qhot -qarch=pwr7 -qtune=pwr7 -qalias=noallptrs -qsimd=auto
+xlC_CXXFLAGS       := -O5 -q64 -qhot -qarch=pwr7 -qtune=pwr7 -qalias=noallptrs -qsimd=auto
 
 HEADERS     := config.hh fixalloc.hh
 BENCHMARKS  :=
@@ -74,7 +75,7 @@ run.sh: $(TARGETS)
 	@echo "ITERATIONS=$(ITERATIONS)" >> run.sh
 	@echo -e $(foreach BENCHMARK, $(BENCHMARKS), '\necho' \
                  $(foreach COMPILER,  $(COMPILERS), \
-                 '\n./$(BENCHMARK)_$(COMPILER) $$ITERATIONS')) >> run.sh
+                 '\nlikwid-pin -q -c 1 ./$(BENCHMARK)_$(COMPILER) $$ITERATIONS')) >> run.sh
 	@chmod a+x ./run.sh
 
 # the clean.sh file accumulates all benchmark executables that have been

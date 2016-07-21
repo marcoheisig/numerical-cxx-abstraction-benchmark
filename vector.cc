@@ -1,4 +1,5 @@
 #include "config.hh"
+#include "runb.hh"
 using namespace std;
 
 void run(std::vector<real> &src, std::vector<real> &dest) {

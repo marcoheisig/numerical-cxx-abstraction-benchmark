@@ -1,6 +1,7 @@
 #include <algorithm>
 #include <functional>
 #include "config.hh"
+#include "runb.hh"
 
 void run(std::vector<real> &src_vec, std::vector<real> &dest_vec) {
     size_t len = columns - 2;

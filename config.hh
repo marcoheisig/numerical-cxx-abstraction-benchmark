@@ -14,16 +14,17 @@
 typedef double real;
 
 /* usable cache size (in bytes). Adapt this to your CPU */
-const size_t usable_cache_size           = 30 * 1000;
+const size_t usable_cache_size           = 22 * 1000;
 
 /* the following parameters should not be changed */
 const size_t domain_size       = usable_cache_size / 2;
 const size_t rows              = 3;
 const size_t flops_per_stencil = 4;
 const real w                   = 0.25; // 1 / (4 * h^2)
-const size_t columns           = (domain_size / sizeof(real) / rows);
+const size_t columns           = 386; //(domain_size / sizeof(real) / rows);
 const size_t cells             = rows * columns;
 const size_t stencils_per_iter = (rows - 2) * (columns - 2);
 const size_t flops_per_iter    = stencils_per_iter * flops_per_stencil;
 
 void run(std::vector<real> &src, std::vector<real> &dest);
+void runb(std::vector<real> &src, std::vector<real> &dest);

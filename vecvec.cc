@@ -1,5 +1,6 @@
 #include "config.hh"
 #include "fixalloc.hh"
+#include "runb.hh"
 
 #define FIXVECTOR std::vector<Real, fixalloc<Real> >
 

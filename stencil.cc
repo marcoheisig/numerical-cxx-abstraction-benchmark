@@ -1,4 +1,5 @@
 #include "config.hh"
+#include "runb.hh"
 
 namespace {
 template<size_t W, size_t H>
